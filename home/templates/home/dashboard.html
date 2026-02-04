@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ZeroOverflow AI - Smart Waste Management Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2a9d8f;
+            --primary-dark: #1d6f65;
+            --secondary-color: #264653;
+            --danger-color: #e76f51;
+            --warning-color: #e9c46a;
+            --success-color: #2a9d8f;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fb;
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #1a3340 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.8rem;
+        }
+        
+        .logo-icon {
+            background: var(--primary-color);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+        }
+        
+        .logo-highlight {
+            color: var(--primary-color);
+        }
+        
+        .nav-tabs {
+            border: none;
+            justify-content: flex-end;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            border: none;
+            font-weight: 500;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+        
+        .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link.active {
+            color: white;
+            background: var(--primary-color);
+        }
+        
+        /* Main Content */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .page-title {
+            color: var(--secondary-color);
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        
+        .page-description {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        
+        /* Page Content */
+        .page-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .page-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            background: white;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-header {
+            background: white;
+            border-bottom: 1px solid #eee;
+            padding: 20px 25px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+        }
+        
+        .card-body {
+            padding: 25px;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-8px);
+        }
+        
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: white;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .stat-icon.total {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        }
+        
+        .stat-icon.safe {
+            background: linear-gradient(135deg, var(--success-color), #1d6f65);
+        }
+        
+        .stat-icon.warning {
+            background: linear-gradient(135deg, var(--warning-color), #d4a82d);
+        }
+        
+        .stat-icon.danger {
+            background: linear-gradient(135deg, var(--danger-color), #c95438);
+        }
+        
+        .stat-info {
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            line-height: 1;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+        
+        .stat-change {
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .stat-change.positive {
+            color: var(--success-color);
+        }
+        
+        .stat-change.negative {
+            color: var(--danger-color);
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 15px rgba(42, 157, 143, 0.3);
+        }
+        
+        .btn-outline-primary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 10px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Tables */
+        .table-container {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table thead th {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 18px 15px;
+            font-weight: 600;
+        }
+        
+        .table tbody tr {
+            transition: var(--transition);
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(42, 157, 143, 0.05);
+        }
+        
+        .status-badge {
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status-badge.safe {
+            background: rgba(42, 157, 143, 0.15);
+            color: #1d6f65;
+        }
+        
+        .status-badge.warning {
+            background: rgba(233, 196, 106, 0.15);
+            color: #b38f1d;
+        }
+        
+        .status-badge.danger {
+            background: rgba(231, 111, 81, 0.15);
+            color: #c95438;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231, 111, 81, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(231, 111, 81, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 111, 81, 0); }
+        }
+        
+        /* Charts */
+        .chart-container {
+            position: relative;
+            height: 100%;
+            min-height: 300px;
+        }
+        
+        /* Map View */
+        #map-container {
+            height: 500px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: linear-gradient(45deg, #8ecae6, #219ebc);
+            position: relative;
+        }
+        
+        .bin-marker {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10;
+            transform: translate(-50%, -50%);
+        }
+        
+        .bin-marker:hover {
+            transform: translate(-50%, -50%) scale(1.3);
+            z-index: 20;
+        }
+        
+        .bin-marker.safe {
+            background-color: var(--success-color);
+            box-shadow: 0 0 0 4px rgba(42, 157, 143, 0.3);
+        }
+        
+        .bin-marker.warning {
+            background-color: var(--warning-color);
+            box-shadow: 0 0 0 4px rgba(233, 196, 106, 0.3);
+        }
+        
+        .bin-marker.danger {
+            background-color: var(--danger-color);
+            box-shadow: 0 0 0 4px rgba(231, 111, 81, 0.3);
+        }
+        
+        /* Analytics Cards */
+        .analytics-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 25px;
+            height: 100%;
+        }
+        
+        /* Settings */
+        .settings-section {
+            margin-bottom: 40px;
+        }
+        
+        .settings-section h3 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .nav-tabs {
+                justify-content: center;
+                margin-top: 20px;
+            }
+            
+            .logo-text {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+        }
+        
+        /* Alerts Page */
+        .alert-card {
+            border-left: 5px solid;
+            margin-bottom: 15px;
+            transition: var(--transition);
+        }
+        
+        .alert-card:hover {
+            transform: translateX(5px);
+        }
+        
+        .alert-card.warning {
+            border-left-color: var(--warning-color);
+        }
+        
+        .alert-card.danger {
+            border-left-color: var(--danger-color);
+        }
+        
+        .alert-card.info {
+            border-left-color: var(--primary-color);
+        }
+        
+        /* Reports Page */
+        .report-card {
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .report-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="btn btn-sm btn-outline-primary mb-3">
+    ⬅ Back to Public Dashboard
+</a>
+    <!-- Header with Navigation -->
+    <header class="dashboard-header">
+        <div class="dashboard-container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="logo-container">
+                        <a href="#" class="logo">
+                            <div class="logo-icon">
+                                <i class="fas fa-recycle"></i>
+                            </div>
+                            <div class="logo-text">
+                                Zero<span class="logo-highlight">Overflow</span> AI
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <ul class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard" type="button" role="tab">
+                                <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="map-tab" data-bs-toggle="tab" data-bs-target="#map" type="button" role="tab">
+                                <i class="fas fa-map-marked-alt me-2"></i> Map View
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="analytics-tab" data-bs-toggle="tab" data-bs-target="#analytics" type="button" role="tab">
+                                <i class="fas fa-chart-line me-2"></i> Analytics
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab">
+                                <i class="fas fa-cog me-2"></i> Settings
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="alerts-tab" data-bs-toggle="tab" data-bs-target="#alerts" type="button" role="tab">
+                                <i class="fas fa-bell me-2"></i> Alerts
+                                <span class="badge bg-danger ms-2">3</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="dashboard-container">
+        <!-- Dashboard Page -->
+        <div class="tab-content">
+            <div class="tab-pane fade show active page-content" id="dashboard" role="tabpanel">
+                <h1 class="page-title">Dashboard Overview</h1>
+                <p class="page-description">Real-time monitoring of waste management system</p>
+                
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon total">
+                            <i class="fas fa-trash-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="total-bins">24</div>
+                            <div class="stat-label">Total Bins</div>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up me-1"></i> 2% from last week
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon safe">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="safe-bins">18</div>
+                            <div class="stat-label">Safe Bins</div>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up me-1"></i> 5% from yesterday
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="warning-bins">4</div>
+                            <div class="stat-label">Warning Level</div>
+                            <div class="stat-change negative">
+                                <i class="fas fa-arrow-down me-1"></i> 1 from yesterday
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon danger">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="danger-bins">2</div>
+                            <div class="stat-label">Critical Bins</div>
+                            <div class="stat-change negative">
+                                <i class="fas fa-arrow-up me-1"></i> 1 needs attention
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>Bin Status Overview</span>
+                                <div>
+                                    <span class="badge bg-success me-2">Safe: 18</span>
+                                    <span class="badge bg-warning me-2">Warning: 4</span>
+                                    <span class="badge bg-danger">Critical: 2</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="overviewChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column -->
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <span>Quick Actions</span>
+                            </div>
+                            <div class="card-body">
+                                <button class="btn btn-primary w-100 mb-3" id="dispatch-btn">
+                                    <i class="fas fa-truck me-2"></i> Dispatch Collection
+                                </button>
+                                <button class="btn btn-outline-primary w-100 mb-3" id="generate-report-btn">
+                                    <i class="fas fa-file-alt me-2"></i> Generate Report
+                                </button>
+                                <button class="btn btn-outline-primary w-100 mb-3" id="send-alerts-btn">
+                                    <i class="fas fa-bell me-2"></i> Send Alerts
+                                </button>
+                                <button class="btn btn-outline-primary w-100" id="simulate-data-btn">
+                                    <i class="fas fa-play-circle me-2"></i> Simulate Day
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <span>Recent Alerts</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-warning d-flex align-items-center mb-3">
+                                    <i class="fas fa-exclamation-triangle me-3"></i>
+                                    <div>
+                                        <strong>Bin #07 Critical</strong>
+                                        <div class="small">Shopping Mall - 92% full</div>
+                                    </div>
+                                </div>
+                                <div class="alert alert-warning d-flex align-items-center mb-3">
+                                    <i class="fas fa-exclamation-triangle me-3"></i>
+                                    <div>
+                                        <strong>Bin #10 Critical</strong>
+                                        <div class="small">Market Square - 95% full</div>
+                                    </div>
+                                </div>
+                                <div class="alert alert-info d-flex align-items-center">
+                                    <i class="fas fa-info-circle me-3"></i>
+                                    <div>
+                                        <strong>Collection Complete</strong>
+                                        <div class="small">5 bins emptied in Central District</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bin Status Table -->
+                <div class="card mt-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Recent Bin Status</span>
+                        <button class="btn btn-sm btn-outline-primary">View All</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Bin ID</th>
+                                        <th>Location</th>
+                                        <th>Fill Level</th>
+                                        <th>Last Emptied</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bin-table-body">
+                                    <!-- Data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Map View Page -->
+            <div class="tab-pane fade page-content" id="map" role="tabpanel">
+                <h1 class="page-title">Map View</h1>
+                <p class="page-description">Interactive map showing bin locations and status</p>
+                
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>Live Bin Map</span>
+                                <div>
+                                    <span class="badge bg-success me-2"><i class="fas fa-circle"></i> Safe</span>
+                                    <span class="badge bg-warning me-2"><i class="fas fa-circle"></i> Warning</span>
+                                    <span class="badge bg-danger"><i class="fas fa-circle"></i> Critical</span>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div id="map-container">
+                                    <!-- Map markers will be added here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <span>Map Controls</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Filter by Status</label>
+                                    <select class="form-control" id="map-filter">
+                                        <option value="all">All Bins</option>
+                                        <option value="safe">Safe Only</option>
+                                        <option value="warning">Warning Only</option>
+                                        <option value="critical">Critical Only</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="auto-refresh" checked>
+                                        <label class="form-check-label" for="auto-refresh">
+                                            Auto Refresh (Every 30s)
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <button class="btn btn-primary w-100 mb-3" id="locate-critical-btn">
+                                    <i class="fas fa-crosshairs me-2"></i> Locate Critical Bins
+                                </button>
+                                
+                                <button class="btn btn-outline-primary w-100 mb-3" id="optimize-route-btn">
+                                    <i class="fas fa-route me-2"></i> Optimize Collection Route
+                                </button>
+                                
+                                <div class="mt-4">
+                                    <h6>Selected Bin Info</h6>
+                                    <div id="bin-details" class="p-3 border rounded mt-2 bg-light">
+                                        <p class="text-muted mb-0">Click on a bin marker to see details</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <span>Bins in Selected Area</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="table table-hover" id="map-bins-table">
+                                <thead>
+                                    <tr>
+                                        <th>Bin ID</th>
+                                        <th>Location</th>
+                                        <th>Coordinates</th>
+                                        <th>Fill Level</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analytics Page -->
+            <div class="tab-pane fade page-content" id="analytics" role="tabpanel">
+                <h1 class="page-title">Analytics</h1>
+                <p class="page-description">Data insights and performance metrics</p>
+                
+                <div class="row mb-4">
+                    <div class="col-lg-8">
+                        <div class="analytics-card">
+                            <h4>Fill Level Trends (Last 7 Days)</h4>
+                            <div class="chart-container">
+                                <canvas id="trendsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="analytics-card">
+                            <h4>Collection Efficiency</h4>
+                            <div class="chart-container">
+                                <canvas id="efficiencyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="analytics-card">
+                            <h4>Overflow Predictions (Next 24h)</h4>
+                            <div class="chart-container">
+                                <canvas id="predictionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6">
+                        <div class="analytics-card">
+                            <h4>Top Locations by Waste Volume</h4>
+                            <div class="chart-container">
+                                <canvas id="locationChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Analytics Reports</span>
+                        <button class="btn btn-sm btn-primary">Generate PDF Report</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h3 class="text-primary">78%</h3>
+                                        <p class="text-muted">Collection Efficiency</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h3 class="text-warning">12%</h3>
+                                        <p class="text-muted">Overflow Rate Reduction</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h3 class="text-success">34%</h3>
+                                        <p class="text-muted">Cost Savings</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings Page -->
+            <div class="tab-pane fade page-content" id="settings" role="tabpanel">
+                <h1 class="page-title">Settings</h1>
+                <p class="page-description">Configure system preferences and thresholds</p>
+                
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <span>System Settings</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="settings-section">
+                                    <h5>Alert Thresholds</h5>
+                                    <div class="mb-4">
+                                        <label class="form-label">Warning Level (%)</label>
+                                        <input type="range" class="form-range" id="warning-threshold" min="50" max="90" value="70">
+                                        <div class="d-flex justify-content-between">
+                                            <small>50%</small>
+                                            <small id="warning-value">70%</small>
+                                            <small>90%</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label">Critical Level (%)</label>
+                                        <input type="range" class="form-range" id="critical-threshold" min="70" max="100" value="85">
+                                        <div class="d-flex justify-content-between">
+                                            <small>70%</small>
+                                            <small id="critical-value">85%</small>
+                                            <small>100%</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="settings-section">
+                                    <h5>Notification Settings</h5>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="email-notifications" checked>
+                                        <label class="form-check-label" for="email-notifications">
+                                            Email Notifications
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="sms-notifications">
+                                        <label class="form-check-label" for="sms-notifications">
+                                            SMS Notifications
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="push-notifications" checked>
+                                        <label class="form-check-label" for="push-notifications">
+                                            Push Notifications
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="settings-section">
+                                    <h5>Data Collection</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">Update Frequency</label>
+                                        <select class="form-control" id="update-frequency">
+                                            <option value="5">Every 5 minutes</option>
+                                            <option value="10" selected>Every 10 minutes</option>
+                                            <option value="15">Every 15 minutes</option>
+                                            <option value="30">Every 30 minutes</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Data Retention</label>
+                                        <select class="form-control" id="data-retention">
+                                            <option value="30">30 days</option>
+                                            <option value="90" selected>90 days</option>
+                                            <option value="180">180 days</option>
+                                            <option value="365">1 year</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between mt-4">
+                                    <button class="btn btn-outline-primary">Reset to Default</button>
+                                    <button class="btn btn-primary">Save Settings</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <span>System Info</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <small class="text-muted">Version</small>
+                                    <p class="mb-0"><strong>ZeroOverflow AI v2.1.3</strong></p>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <small class="text-muted">Last Updated</small>
+                                    <p class="mb-0"><strong>March 15, 2024</strong></p>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <small class="text-muted">Active Bins</small>
+                                    <p class="mb-0"><strong>24 out of 30</strong></p>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <small class="text-muted">Data Points Collected</small>
+                                    <p class="mb-0"><strong>1,245,892</strong></p>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <small class="text-muted">AI Model Accuracy</small>
+                                    <p class="mb-0"><strong>94.7%</strong></p>
+                                </div>
+                                
+                                <div class="mt-4 pt-3 border-top">
+                                    <button class="btn btn-outline-danger w-100">
+                                        <i class="fas fa-sync-alt me-2"></i> Reset System
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Alerts Page -->
+            <div class="tab-pane fade page-content" id="alerts" role="tabpanel">
+                <h1 class="page-title">Alerts & Notifications</h1>
+                <p class="page-description">System alerts and notification history</p>
+                
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>Recent Alerts</span>
+                                <button class="btn btn-sm btn-outline-primary" id="mark-all-read">
+                                    Mark All as Read
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert-card danger p-3 mb-3 bg-white rounded border">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="fas fa-exclamation-circle text-danger fa-2x"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">CRITICAL: Bin Overflow Imminent</h6>
+                                            <p class="mb-1">Bin #07 at Shopping Mall is 92% full and requires immediate attention.</p>
+                                            <small class="text-muted">10 minutes ago</small>
+                                        </div>
+                                        <div>
+                                            <span class="badge bg-danger">URGENT</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert-card danger p-3 mb-3 bg-white rounded border">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="fas fa-exclamation-circle text-danger fa-2x"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">CRITICAL: Bin Overflow Imminent</h6>
+                                            <p class="mb-1">Bin #10 at Market Square is 95% full and requires immediate attention.</p>
+                                            <small class="text-muted">25 minutes ago</small>
+                                        </div>
+                                        <div>
+                                            <span class="badge bg-danger">URGENT</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert-card warning p-3 mb-3 bg-white rounded border">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="fas fa-exclamation-triangle text-warning fa-2x"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">WARNING: High Fill Level Detected</h6>
+                                            <p class="mb-1">Bin #06 at Hospital Area is 81% full and approaching critical level.</p>
+                                            <small class="text-muted">1 hour ago</small>
+                                        </div>
+                                        <div>
+                                            <span class="badge bg-warning">WARNING</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert-card info p-3 mb-3 bg-white rounded border">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="fas fa-info-circle text-primary fa-2x"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">Collection Task Completed</h6>
+                                            <p class="mb-1">Collection team has successfully emptied 5 bins in Central District.</p>
+                                            <small class="text-muted">2 hours ago</small>
+                                        </div>
+                                        <div>
+                                            <span class="badge bg-info">INFO</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert-card info p-3 bg-white rounded border">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="fas fa-info-circle text-primary fa-2x"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">System Maintenance Completed</h6>
+                                            <p class="mb-1">Scheduled maintenance has been completed. All systems are operational.</p>
+                                            <small class="text-muted">Yesterday, 3:45 PM</small>
+                                        </div>
+                                        <div>
+                                            <span class="badge bg-info">INFO</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <span>Alert Statistics</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-4">
+                                    <h6>Alert Distribution (Last 7 Days)</h6>
+                                    <div class="chart-container">
+                                        <canvas id="alertChart"></canvas>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <small class="text-muted">Total Alerts Today</small>
+                                    <h3 class="text-primary">8</h3>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <small class="text-muted">Critical Alerts</small>
+                                    <h3 class="text-danger">2</h3>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <small class="text-muted">Average Response Time</small>
+                                    <h3 class="text-success">42 min</h3>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <button class="btn btn-primary w-100 mb-2">
+                                        <i class="fas fa-cog me-2"></i> Alert Settings
+                                    </button>
+                                    <button class="btn btn-outline-primary w-100">
+                                        <i class="fas fa-history me-2"></i> View Alert History
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="dashboard-container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>ZeroOverflow AI</h5>
+                    <p class="mb-0">Smart Waste Management System</p>
+                    <small class="text-muted">Powered by AI & IoT Technology</small>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">© 2024 ZeroOverflow AI Dashboard</p>
+                    <small class="text-muted">Hackathon Project | Real-time Monitoring System</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sample bin data
+        const binData = [
+            { id: 1, location: "Main Street", fillLevel: 45, lastEmptied: "2 hours ago", status: "safe", lat: 40.7128, lng: -74.0060 },
+            { id: 2, location: "Central Park", fillLevel: 78, lastEmptied: "6 hours ago", status: "warning", lat: 40.7851, lng: -73.9683 },
+            { id: 3, location: "Shopping Mall", fillLevel: 92, lastEmptied: "1 day ago", status: "critical", lat: 40.7505, lng: -73.9934 },
+            { id: 4, location: "University Campus", fillLevel: 35, lastEmptied: "3 hours ago", status: "safe", lat: 40.8075, lng: -73.9626 },
+            { id: 5, location: "Train Station", fillLevel: 68, lastEmptied: "5 hours ago", status: "safe", lat: 40.7506, lng: -73.9775 },
+            { id: 6, location: "Hospital Area", fillLevel: 81, lastEmptied: "8 hours ago", status: "warning", lat: 40.7614, lng: -73.9776 },
+            { id: 7, location: "Business District", fillLevel: 88, lastEmptied: "1 day ago", status: "critical", lat: 40.7559, lng: -73.9865 },
+            { id: 8, location: "Residential Area A", fillLevel: 52, lastEmptied: "4 hours ago", status: "safe", lat: 40.7831, lng: -73.9712 },
+            { id: 9, location: "Residential Area B", fillLevel: 73, lastEmptied: "7 hours ago", status: "warning", lat: 40.7687, lng: -73.9918 },
+            { id: 10, location: "Market Square", fillLevel: 95, lastEmptied: "1 day ago", status: "critical", lat: 40.7590, lng: -73.9845 }
+        ];
+        
+        // Map positions (simplified for demo)
+        const mapPositions = [
+            { x: 20, y: 30 },
+            { x: 40, y: 20 },
+            { x: 30, y: 40 },
+            { x: 15, y: 60 },
+            { x: 50, y: 50 },
+            { x: 35, y: 25 },
+            { x: 45, y: 65 },
+            { x: 25, y: 50 },
+            { x: 55, y: 35 },
+            { x: 60, y: 45 }
+        ];
+        
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDashboard();
+            setupEventListeners();
+            startLiveUpdates();
+        });
+        
+        function initializeDashboard() {
+            updateStats();
+            renderBinTable();
+            renderMapMarkers();
+            initializeCharts();
+            setupRangeSliders();
+        }
+        
+        function updateStats() {
+            const totalBins = binData.length;
+            const safeBins = binData.filter(bin => bin.status === "safe").length;
+            const warningBins = binData.filter(bin => bin.status === "warning").length;
+            const criticalBins = binData.filter(bin => bin.status === "critical").length;
+            
+            document.getElementById('total-bins').textContent = totalBins;
+            document.getElementById('safe-bins').textContent = safeBins;
+            document.getElementById('warning-bins').textContent = warningBins;
+            document.getElementById('danger-bins').textContent = criticalBins;
+        }
+        
+        function renderBinTable() {
+            const tableBody = document.getElementById('bin-table-body');
+            tableBody.innerHTML = '';
+            
+            binData.forEach(bin => {
+                let statusClass = '';
+                let statusText = '';
+                
+                if (bin.status === 'safe') {
+                    statusClass = 'safe';
+                    statusText = 'Safe';
+                } else if (bin.status === 'warning') {
+                    statusClass = 'warning';
+                    statusText = 'Warning';
+                } else {
+                    statusClass = 'danger';
+                    statusText = 'Critical';
+                }
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>#${bin.id.toString().padStart(2, '0')}</strong></td>
+                    <td><i class="fas fa-map-marker-alt me-2 text-muted"></i> ${bin.location}</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="progress flex-grow-1" style="height: 8px;">
+                                <div class="progress-bar ${bin.fillLevel < 70 ? 'bg-success' : bin.fillLevel < 85 ? 'bg-warning' : 'bg-danger'}" 
+                                     role="progressbar" style="width: ${bin.fillLevel}%"></div>
+                            </div>
+                            <span class="ms-2">${bin.fillLevel}%</span>
+                        </div>
+                    </td>
+                    <td>${bin.lastEmptied}</td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" onclick="viewBinDetails(${bin.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function renderMapMarkers() {
+            const mapContainer = document.getElementById('map-container');
+            mapContainer.innerHTML = '';
+            
+            binData.forEach((bin, index) => {
+                if (index < mapPositions.length) {
+                    const marker = document.createElement('div');
+                    marker.className = `bin-marker ${bin.status}`;
+                    marker.style.left = `${mapPositions[index].x}%`;
+                    marker.style.top = `${mapPositions[index].y}%`;
+                    marker.innerHTML = `<i class="fas fa-trash-alt"></i>`;
+                    marker.title = `Bin #${bin.id}: ${bin.location} - ${bin.fillLevel}% full`;
+                    
+                    marker.addEventListener('click', function() {
+                        showBinDetails(bin);
+                    });
+                    
+                    mapContainer.appendChild(marker);
+                }
+            });
+            
+            // Also update map bins table
+            updateMapTable();
+        }
+        
+        function updateMapTable() {
+            const tableBody = document.querySelector('#map-bins-table tbody');
+            tableBody.innerHTML = '';
+            
+            binData.forEach(bin => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>#${bin.id.toString().padStart(2, '0')}</td>
+                    <td>${bin.location}</td>
+                    <td>${bin.lat.toFixed(4)}, ${bin.lng.toFixed(4)}</td>
+                    <td>${bin.fillLevel}%</td>
+                    <td><span class="status-badge ${bin.status}">${bin.status.charAt(0).toUpperCase() + bin.status.slice(1)}</span></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function showBinDetails(bin) {
+            const detailsDiv = document.getElementById('bin-details');
+            detailsDiv.innerHTML = `
+                <h6>Bin #${bin.id}</h6>
+                <p class="mb-1"><strong>Location:</strong> ${bin.location}</p>
+                <p class="mb-1"><strong>Fill Level:</strong> ${bin.fillLevel}%</p>
+                <p class="mb-1"><strong>Status:</strong> <span class="status-badge ${bin.status}">${bin.status.charAt(0).toUpperCase() + bin.status.slice(1)}</span></p>
+                <p class="mb-1"><strong>Last Emptied:</strong> ${bin.lastEmptied}</p>
+                <button class="btn btn-sm btn-primary mt-2 w-100" onclick="dispatchToBin(${bin.id})">
+                    <i class="fas fa-truck me-1"></i> Dispatch Collection
+                </button>
+            `;
+        }
+        
+        function viewBinDetails(binId) {
+            const bin = binData.find(b => b.id === binId);
+            if (bin) {
+                alert(`Bin Details:\n\nID: #${bin.id}\nLocation: ${bin.location}\nFill Level: ${bin.fillLevel}%\nStatus: ${bin.status.toUpperCase()}\nLast Emptied: ${bin.lastEmptied}`);
+            }
+        }
+        
+        function dispatchToBin(binId) {
+            alert(`Collection team dispatched to Bin #${binId}`);
+        }
+        
+        function initializeCharts() {
+            // Overview Chart
+            const overviewCtx = document.getElementById('overviewChart').getContext('2d');
+            new Chart(overviewCtx, {
+                type: 'bar',
+                data: {
+                    labels: binData.map(b => `Bin #${b.id}`),
+                    datasets: [{
+                        label: 'Fill Level (%)',
+                        data: binData.map(b => b.fillLevel),
+                        backgroundColor: binData.map(b => {
+                            if (b.fillLevel < 70) return '#2a9d8f';
+                            if (b.fillLevel < 85) return '#e9c46a';
+                            return '#e76f51';
+                        }),
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Fill Level (%)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Trends Chart
+            const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+            new Chart(trendsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [
+                        {
+                            label: 'Average Fill Level',
+                            data: [45, 52, 48, 61, 58, 65, 70],
+                            borderColor: '#2a9d8f',
+                            backgroundColor: 'rgba(42, 157, 143, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Critical Bins',
+                            data: [1, 1, 2, 1, 3, 2, 2],
+                            borderColor: '#e76f51',
+                            backgroundColor: 'rgba(231, 111, 81, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+            
+            // Efficiency Chart
+            const efficiencyCtx = document.getElementById('efficiencyChart').getContext('2d');
+            new Chart(efficiencyCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Efficient', 'Inefficient', 'Missed'],
+                    datasets: [{
+                        data: [78, 15, 7],
+                        backgroundColor: ['#2a9d8f', '#e9c46a', '#e76f51'],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+            
+            // Prediction Chart
+            const predictionCtx = document.getElementById('predictionChart').getContext('2d');
+            new Chart(predictionCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Now', '+4h', '+8h', '+12h', '+16h', '+20h', '+24h'],
+                    datasets: [{
+                        label: 'Bins at Risk',
+                        data: [2, 3, 4, 5, 7, 8, 9],
+                        borderColor: '#e76f51',
+                        backgroundColor: 'rgba(231, 111, 81, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Bins'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Location Chart
+            const locationCtx = document.getElementById('locationChart').getContext('2d');
+            new Chart(locationCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Market', 'Mall', 'Hospital', 'Station', 'Park'],
+                    datasets: [{
+                        label: 'Waste Volume (kg)',
+                        data: [850, 720, 680, 540, 490],
+                        backgroundColor: '#264653',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Waste Volume (kg)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Alert Chart
+            const alertCtx = document.getElementById('alertChart').getContext('2d');
+            new Chart(alertCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Critical', 'Warning', 'Info'],
+                    datasets: [{
+                        data: [15, 35, 50],
+                        backgroundColor: ['#e76f51', '#e9c46a', '#2a9d8f'],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+        
+        function setupRangeSliders() {
+            const warningSlider = document.getElementById('warning-threshold');
+            const criticalSlider = document.getElementById('critical-threshold');
+            const warningValue = document.getElementById('warning-value');
+            const criticalValue = document.getElementById('critical-value');
+            
+            warningSlider.addEventListener('input', function() {
+                warningValue.textContent = this.value + '%';
+            });
+            
+            criticalSlider.addEventListener('input', function() {
+                criticalValue.textContent = this.value + '%';
+            });
+        }
+        
+        function setupEventListeners() {
+            // Dispatch button
+            document.getElementById('dispatch-btn').addEventListener('click', function() {
+                alert('Collection team has been dispatched to critical bins!');
+            });
+            
+            // Generate report button
+            document.getElementById('generate-report-btn').addEventListener('click', function() {
+                alert('PDF report generated successfully!');
+            });
+            
+            // Send alerts button
+            document.getElementById('send-alerts-btn').addEventListener('click', function() {
+                alert('Alerts sent to collection team!');
+            });
+            
+            // Simulate data button
+            document.getElementById('simulate-data-btn').addEventListener('click', function() {
+                this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Simulating...';
+                
+                setTimeout(() => {
+                    simulateDataUpdate();
+                    this.innerHTML = '<i class="fas fa-play-circle me-2"></i> Simulate Day';
+                    alert('Day simulation complete! Check updated data.');
+                }, 1500);
+            });
+            
+            // Map filter
+            document.getElementById('map-filter').addEventListener('change', function() {
+                filterMapMarkers(this.value);
+            });
+            
+            // Locate critical bins
+            document.getElementById('locate-critical-btn').addEventListener('click', function() {
+                alert('Map centered on critical bins');
+            });
+            
+            // Optimize route
+            document.getElementById('optimize-route-btn').addEventListener('click', function() {
+                alert('Optimal collection route calculated!');
+            });
+            
+            // Mark all alerts as read
+            document.getElementById('mark-all-read').addEventListener('click', function() {
+                document.querySelectorAll('.alert-card').forEach(card => {
+                    card.style.opacity = '0.7';
+                });
+                document.querySelector('.notification-badge').textContent = '0';
+                alert('All alerts marked as read');
+            });
+            
+            // Bootstrap tab switching
+            const tabEls = document.querySelectorAll('button[data-bs-toggle="tab"]');
+            tabEls.forEach(tabEl => {
+                tabEl.addEventListener('shown.bs.tab', function(event) {
+                    // Update page title based on active tab
+                    const activeTab = event.target.textContent.trim();
+                    document.getElementById('page-title').textContent = activeTab;
+                    
+                    // Update description
+                    const descriptions = {
+                        'Dashboard': 'Real-time monitoring of waste management system',
+                        'Map View': 'Interactive map showing bin locations and status',
+                        'Analytics': 'Data insights and performance metrics',
+                        'Settings': 'Configure system preferences and thresholds',
+                        'Alerts': 'System alerts and notification history'
+                    };
+                    
+                    if (descriptions[activeTab]) {
+                        document.getElementById('page-description').textContent = descriptions[activeTab];
+                    }
+                });
+            });
+        }
+        
+        function filterMapMarkers(filter) {
+            const markers = document.querySelectorAll('.bin-marker');
+            markers.forEach(marker => {
+                if (filter === 'all' || marker.classList.contains(filter)) {
+                    marker.style.display = 'flex';
+                } else {
+                    marker.style.display = 'none';
+                }
+            });
+        }
+        
+        function simulateDataUpdate() {
+            // Randomly update bin data
+            binData.forEach(bin => {
+                if (Math.random() < 0.4) {
+                    const change = Math.floor(Math.random() * 20) - 5;
+                    bin.fillLevel = Math.max(10, Math.min(100, bin.fillLevel + change));
+                    
+                    if (bin.fillLevel < 70) {
+                        bin.status = "safe";
+                    } else if (bin.fillLevel < 85) {
+                        bin.status = "warning";
+                    } else {
+                        bin.status = "critical";
+                    }
+                    
+                    if (Math.random() < 0.2) {
+                        const times = ['Just now', '1 hour ago', '2 hours ago', '3 hours ago', '4 hours ago'];
+                        bin.lastEmptied = times[Math.floor(Math.random() * times.length)];
+                    }
+                }
+            });
+            
+            // Update UI
+            updateStats();
+            renderBinTable();
+            renderMapMarkers();
+        }
+        
+        function startLiveUpdates() {
+            setInterval(() => {
+                if (document.getElementById('auto-refresh')?.checked) {
+                    simulateDataUpdate();
+                }
+            }, 30000); // Every 30 seconds
+        }
+        
+        // Expose functions to global scope for button onclick events
+        window.viewBinDetails = viewBinDetails;
+        window.dispatchToBin = dispatchToBin;
+    </script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

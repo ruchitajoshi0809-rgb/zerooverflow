@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Government Alert Portal - ZeroOverflow AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gov-blue: #0d47a1;
+            --gov-blue-dark: #0a3570;
+            --alert-red: #d32f2f;
+            --alert-orange: #f57c00;
+            --gov-light: #e3f2fd;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        /* Login Page */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--gov-blue) 0%, var(--gov-blue-dark) 100%);
+            padding: 20px;
+        }
+        
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.8s ease;
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .gov-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 2.2rem;
+            color: var(--gov-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        
+        .gov-logo i {
+            background: var(--gov-blue);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-right: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .login-title {
+            text-align: center;
+            color: #444;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        
+        .form-control {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 14px 20px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            border-color: var(--gov-blue);
+            box-shadow: 0 0 0 0.25rem rgba(13, 71, 161, 0.25);
+        }
+        
+        .btn-gov {
+            background: linear-gradient(135deg, var(--gov-blue) 0%, var(--gov-blue-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            width: 100%;
+        }
+        
+        .btn-gov:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 15px rgba(13, 71, 161, 0.3);
+        }
+        
+        /* Government Dashboard */
+        .gov-header {
+            background: linear-gradient(135deg, var(--gov-blue) 0%, var(--gov-blue-dark) 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .header-logo i {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+        
+        .header-logo h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        
+        .header-logo span {
+            color: #bbdefb;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 20px;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Alert Banner */
+        .alert-banner {
+            background: linear-gradient(135deg, var(--alert-red) 0%, #b71c1c 100%);
+            color: white;
+            padding: 20px;
+            margin: 0;
+            text-align: center;
+            animation: pulseAlert 2s infinite;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3);
+        }
+        
+        @keyframes pulseAlert {
+            0% { box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3); }
+            50% { box-shadow: 0 4px 25px rgba(211, 47, 47, 0.5); }
+            100% { box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3); }
+        }
+        
+        .alert-banner h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        /* Dashboard Container */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .page-title {
+            color: var(--gov-blue-dark);
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        
+        .page-description {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: white;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .stat-icon.total {
+            background: linear-gradient(135deg, var(--gov-blue), var(--gov-blue-dark));
+        }
+        
+        .stat-icon.critical {
+            background: linear-gradient(135deg, var(--alert-red), #b71c1c);
+        }
+        
+        .stat-icon.warning {
+            background: linear-gradient(135deg, var(--alert-orange), #e65100);
+        }
+        
+        .stat-icon.attended {
+            background: linear-gradient(135deg, #388e3c, #1b5e20);
+        }
+        
+        .stat-info {
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--gov-blue-dark);
+            line-height: 1;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+        
+        /* Alert Cards */
+        .alert-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 25px;
+            border-left: 8px solid var(--alert-red);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .alert-card.warning {
+            border-left-color: var(--alert-orange);
+        }
+        
+        .alert-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+        
+        .alert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .alert-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .alert-title i {
+            font-size: 1.8rem;
+        }
+        
+        .alert-critical .alert-title i {
+            color: var(--alert-red);
+        }
+        
+        .alert-warning .alert-title i {
+            color: var(--alert-orange);
+        }
+        
+        .alert-badge {
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .badge-critical {
+            background: rgba(211, 47, 47, 0.15);
+            color: var(--alert-red);
+        }
+        
+        .badge-warning {
+            background: rgba(245, 124, 0, 0.15);
+            color: var(--alert-orange);
+        }
+        
+        .alert-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .detail-item {
+            padding: 15px;
+            background: var(--gov-light);
+            border-radius: 10px;
+        }
+        
+        .detail-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .alert-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .btn-action {
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-action.primary {
+            background: var(--gov-blue);
+            color: white;
+        }
+        
+        .btn-action.primary:hover {
+            background: var(--gov-blue-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-action.secondary {
+            background: transparent;
+            border: 2px solid var(--gov-blue);
+            color: var(--gov-blue);
+        }
+        
+        .btn-action.secondary:hover {
+            background: rgba(13, 71, 161, 0.1);
+        }
+        
+        .btn-action.success {
+            background: #388e3c;
+            color: white;
+        }
+        
+        .btn-action.success:hover {
+            background: #2e7d32;
+            transform: translateY(-2px);
+        }
+        
+        /* Table */
+        .table-container {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            margin-top: 30px;
+        }
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table thead th {
+            background: var(--gov-blue);
+            color: white;
+            border: none;
+            padding: 18px 15px;
+            font-weight: 600;
+        }
+        
+        .table tbody tr {
+            transition: var(--transition);
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(13, 71, 161, 0.05);
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        
+        .status-critical {
+            background-color: var(--alert-red);
+            box-shadow: 0 0 10px rgba(211, 47, 47, 0.5);
+        }
+        
+        .status-warning {
+            background-color: var(--alert-orange);
+            box-shadow: 0 0 10px rgba(245, 124, 0, 0.5);
+        }
+        
+        /* No Alerts */
+        .no-alerts {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .no-alerts i {
+            font-size: 4rem;
+            color: #4caf50;
+            margin-bottom: 20px;
+        }
+        
+        .no-alerts h3 {
+            color: var(--gov-blue-dark);
+            margin-bottom: 10px;
+        }
+        
+        /* Footer */
+        .gov-footer {
+            background: var(--gov-blue-dark);
+            color: white;
+            padding: 30px 20px;
+            margin-top: 50px;
+        }
+        
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+        
+        .footer-logo span {
+            color: #bbdefb;
+        }
+        
+        .footer-info {
+            text-align: right;
+        }
+        
+        .footer-info p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-box {
+                padding: 30px 20px;
+            }
+            
+            .gov-logo {
+                font-size: 1.8rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .alert-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .alert-actions {
+                flex-direction: column;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .footer-info {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page (Initial View) -->
+    <div id="login-page" class="login-container">
+        <div class="login-box">
+            <div class="login-logo">
+                <div class="gov-logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>GovAlert</span> Portal
+                </div>
+                <p class="text-muted">ZeroOverflow AI - Government Access</p>
+            </div>
+            
+            <h2 class="login-title">Government Official Login</h2>
+            
+            <div class="mb-4">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter government ID" value="gov_official">
+            </div>
+            
+            <div class="mb-4">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter password" value="••••••••">
+            </div>
+            
+            <div class="d-grid gap-2">
+                <button class="btn btn-gov" id="login-btn">
+                    <i class="fas fa-sign-in-alt me-2"></i> Login to Dashboard
+                </button>
+            </div>
+            
+            <div class="mt-4 text-center">
+                <small class="text-muted">For demonstration purposes only. Use default credentials.</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Government Dashboard (Hidden Initially) -->
+    <div id="dashboard-page" style="display: none;">
+        <!-- Header -->
+        <header class="gov-header">
+            <div class="header-container">
+                <div class="header-content">
+                    <div class="header-logo">
+                        <i class="fas fa-shield-alt"></i>
+                        <h1>GovAlert <span>Portal</span></h1>
+                    </div>
+                    
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold">Municipal Officer</div>
+                            <div class="small">Waste Management Dept.</div>
+                        </div>
+                        <a href="#" class="logout-btn" id="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Alert Banner -->
+        <div class="alert-banner" id="alert-banner">
+            <h2>
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="alert-count">3</span> bins need immediate collection!
+                <i class="fas fa-exclamation-triangle"></i>
+            </h2>
+            <p class="mt-2 mb-0">Overflow risk detected in multiple locations. Dispatch collection teams immediately.</p>
+        </div>
+
+        <!-- Dashboard Content -->
+        <main class="dashboard-container">
+            <h1 class="page-title">Waste Management Alert Dashboard</h1>
+            <p class="page-description">Real-time overflow alerts from ZeroOverflow AI monitoring system</p>
+            
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-trash-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="total-alerts">5</div>
+                        <div class="stat-label">Active Alerts</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon critical">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="critical-alerts">3</div>
+                        <div class="stat-label">Critical Priority</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="warning-alerts">2</div>
+                        <div class="stat-label">Warning Priority</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon attended">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="attended-alerts">12</div>
+                        <div class="stat-label">Attended Today</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Alert Cards -->
+            <div id="alerts-container">
+                <!-- Alerts will be dynamically generated here -->
+            </div>
+            
+            <!-- All Bins Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-list me-2"></i> All Overflow Risk Bins</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-container">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Bin ID</th>
+                                    <th>Location</th>
+                                    <th>Fill Level</th>
+                                    <th>Status</th>
+                                    <th>Last Updated</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bins-table-body">
+                                <!-- Bin data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- No Alerts State (Hidden by default) -->
+            <div id="no-alerts" class="no-alerts" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                <h3>No Active Alerts</h3>
+                <p class="text-muted">All bins are currently within safe limits.</p>
+                <button class="btn btn-gov mt-3" id="simulate-alerts">
+                    <i class="fas fa-bell me-2"></i> Simulate Test Alerts
+                </button>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="gov-footer">
+            <div class="footer-container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        GovAlert <span>Portal</span>
+                    </div>
+                    <div class="footer-info">
+                        <p>ZeroOverflow AI - Smart Waste Management System</p>
+                        <p>© 2024 Municipal Corporation. For official use only.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Sample data for overflow risk bins
+        const overflowBins = [
+            { 
+                id: 1, 
+                location: "Canteen Area", 
+                fillLevel: 92, 
+                status: "critical",
+                lastUpdated: "10 minutes ago",
+                priority: "high",
+                address: "Main Campus, Block A",
+                area: "Educational Zone",
+                prediction: "Overflow in 2-3 hours",
+                alertMessage: "🚨 Action Required: Overflow risk at Canteen Area"
+            },
+            { 
+                id: 2, 
+                location: "Market Square", 
+                fillLevel: 95, 
+                status: "critical",
+                lastUpdated: "25 minutes ago",
+                priority: "high",
+                address: "Central Market, Downtown",
+                area: "Commercial Zone",
+                prediction: "Overflow in 1-2 hours",
+                alertMessage: "🚨 Action Required: Overflow risk at Market Square"
+            },
+            { 
+                id: 3, 
+                location: "Shopping Mall", 
+                fillLevel: 88, 
+                status: "critical",
+                lastUpdated: "45 minutes ago",
+                priority: "high",
+                address: "City Mall, 2nd Floor",
+                area: "Commercial Zone",
+                prediction: "Overflow in 3-4 hours",
+                alertMessage: "🚨 Action Required: Overflow risk at Shopping Mall"
+            },
+            { 
+                id: 4, 
+                location: "Hospital Area", 
+                fillLevel: 81, 
+                status: "warning",
+                lastUpdated: "1 hour ago",
+                priority: "medium",
+                address: "City Hospital Entrance",
+                area: "Medical Zone",
+                prediction: "Overflow in 5-6 hours",
+                alertMessage: "⚠ Warning: High fill level at Hospital Area"
+            },
+            { 
+                id: 5, 
+                location: "Business District", 
+                fillLevel: 78, 
+                status: "warning",
+                lastUpdated: "2 hours ago",
+                priority: "medium",
+                address: "Financial Street, Tower B",
+                area: "Business Zone",
+                prediction: "Overflow in 6-8 hours",
+                alertMessage: "⚠ Warning: High fill level at Business District"
+            }
+        ];
+
+        // Sample for attended bins
+        const attendedBins = [
+            { id: 6, location: "Central Park", fillLevel: 45, status: "safe", lastUpdated: "3 hours ago" },
+            { id: 7, location: "Train Station", fillLevel: 52, status: "safe", lastUpdated: "4 hours ago" },
+            { id: 8, location: "Residential Area A", fillLevel: 48, status: "safe", lastUpdated: "5 hours ago" }
+        ];
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            // Auto-login for demo (comment out for real login flow)
+            setTimeout(autoLogin, 500);
+        });
+
+        function autoLogin() {
+            loginToDashboard();
+        }
+
+        function setupEventListeners() {
+            // Login button
+            document.getElementById('login-btn').addEventListener('click', loginToDashboard);
+            
+            // Logout button
+            document.getElementById('logout-btn').addEventListener('click', logout);
+            
+            // Simulate alerts button
+            document.getElementById('simulate-alerts')?.addEventListener('click', simulateNewAlerts);
+            
+            // Simulate pressing Enter on password field to login
+            document.getElementById('password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    loginToDashboard();
+                }
+            });
+        }
+
+        function loginToDashboard() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Simple validation for demo
+            if (username && password) {
+                // Show login success notification
+                showNotification('Login successful! Loading dashboard...', 'success');
+                
+                // Switch to dashboard view
+                document.getElementById('login-page').style.display = 'none';
+                document.getElementById('dashboard-page').style.display = 'block';
+                
+                // Initialize dashboard
+                initializeDashboard();
+                
+                // Simulate email notification (in console)
+                simulateEmailNotification();
+            } else {
+                showNotification('Please enter both username and password', 'error');
+            }
+        }
+
+        function logout() {
+            // Show logout notification
+            showNotification('Logged out successfully', 'info');
+            
+            // Switch back to login view
+            document.getElementById('dashboard-page').style.display = 'none';
+            document.getElementById('login-page').style.display = 'flex';
+            
+            // Clear any interval
+            if (window.alertInterval) {
+                clearInterval(window.alertInterval);
+            }
+        }
+
+        function initializeDashboard() {
+            updateStats();
+            renderAlerts();
+            renderBinsTable();
+            
+            // Start auto-update simulation
+            startAlertUpdates();
+        }
+
+        function updateStats() {
+            const criticalCount = overflowBins.filter(bin => bin.status === "critical").length;
+            const warningCount = overflowBins.filter(bin => bin.status === "warning").length;
+            const totalAlerts = overflowBins.length;
+            
+            document.getElementById('total-alerts').textContent = totalAlerts;
+            document.getElementById('critical-alerts').textContent = criticalCount;
+            document.getElementById('warning-alerts').textContent = warningCount;
+            document.getElementById('alert-count').textContent = criticalCount;
+            
+            // Update attended count (random for demo)
+            document.getElementById('attended-alerts').textContent = Math.floor(Math.random() * 5) + 10;
+            
+            // Show/hide no alerts message
+            if (totalAlerts === 0) {
+                document.getElementById('no-alerts').style.display = 'block';
+                document.getElementById('alerts-container').style.display = 'none';
+                document.getElementById('alert-banner').style.display = 'none';
+            } else {
+                document.getElementById('no-alerts').style.display = 'none';
+                document.getElementById('alerts-container').style.display = 'block';
+                document.getElementById('alert-banner').style.display = 'block';
+            }
+        }
+
+        function renderAlerts() {
+            const container = document.getElementById('alerts-container');
+            container.innerHTML = '';
+            
+            if (overflowBins.length === 0) {
+                return;
+            }
+            
+            // Sort by priority (critical first)
+            const sortedBins = [...overflowBins].sort((a, b) => {
+                if (a.status === "critical" && b.status !== "critical") return -1;
+                if (a.status !== "critical" && b.status === "critical") return 1;
+                return b.fillLevel - a.fillLevel;
+            });
+            
+            sortedBins.forEach(bin => {
+                const alertCard = createAlertCard(bin);
+                container.appendChild(alertCard);
+            });
+        }
+
+        function createAlertCard(bin) {
+            const card = document.createElement('div');
+            card.className = `alert-card ${bin.status === 'critical' ? 'alert-critical' : 'alert-warning'}`;
+            
+            const statusText = bin.status === 'critical' ? 'CRITICAL' : 'WARNING';
+            const badgeClass = bin.status === 'critical' ? 'badge-critical' : 'badge-warning';
+            const icon = bin.status === 'critical' ? 'fa-exclamation-circle' : 'fa-exclamation-triangle';
+            
+            card.innerHTML = `
+                <div class="alert-header">
+                    <div class="alert-title">
+                        <i class="fas ${icon}"></i>
+                        <span>${bin.alertMessage}</span>
+                    </div>
+                    <span class="alert-badge ${badgeClass}">${statusText}</span>
+                </div>
+                
+                <div class="alert-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Location</div>
+                        <div class="detail-value">${bin.location}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Fill Level</div>
+                        <div class="detail-value">${bin.fillLevel}%</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Area</div>
+                        <div class="detail-value">${bin.area}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Overflow Prediction</div>
+                        <div class="detail-value">${bin.prediction}</div>
+                    </div>
+                </div>
+                
+                <div class="alert-actions">
+                    <button class="btn-action primary" onclick="dispatchTeam(${bin.id})">
+                        <i class="fas fa-truck"></i> Dispatch Collection Team
+                    </button>
+                    <button class="btn-action secondary" onclick="viewDetails(${bin.id})">
+                        <i class="fas fa-info-circle"></i> View Details
+                    </button>
+                    <button class="btn-action success" onclick="markAsAttended(${bin.id})">
+                        <i class="fas fa-check"></i> Mark as Attended
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function renderBinsTable() {
+            const tableBody = document.getElementById('bins-table-body');
+            tableBody.innerHTML = '';
+            
+            overflowBins.forEach(bin => {
+                const row = document.createElement('tr');
+                const statusClass = bin.status === 'critical' ? 'status-critical' : 'status-warning';
+                const statusText = bin.status === 'critical' ? 'Critical' : 'Warning';
+                
+                row.innerHTML = `
+                    <td><strong>#${bin.id.toString().padStart(2, '0')}</strong></td>
+                    <td>${bin.location}</td>
+                    <td>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar ${bin.fillLevel < 70 ? 'bg-success' : bin.fillLevel < 85 ? 'bg-warning' : 'bg-danger'}" 
+                                 style="width: ${bin.fillLevel}%"></div>
+                        </div>
+                        <small>${bin.fillLevel}%</small>
+                    </td>
+                    <td>
+                        <span class="status-indicator ${statusClass}"></span>
+                        ${statusText}
+                    </td>
+                    <td>${bin.lastUpdated}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" onclick="dispatchTeam(${bin.id})">
+                            <i class="fas fa-truck"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger ms-1" onclick="viewDetails(${bin.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Action Functions
+        function dispatchTeam(binId) {
+            const bin = overflowBins.find(b => b.id === binId);
+            if (bin) {
+                showNotification(`Collection team dispatched to ${bin.location}`, 'success');
+                simulateSMSNotification(bin);
+                
+                // In a real app, this would make an API call
+                console.log(`🚚 DISPATCH LOG: Team sent to ${bin.location} (Bin #${binId}) at ${new Date().toLocaleTimeString()}`);
+            }
+        }
+
+        function viewDetails(binId) {
+            const bin = overflowBins.find(b => b.id === binId);
+            if (bin) {
+                const details = `
+Bin Details:
+- ID: #${bin.id}
+- Location: ${bin.location}
+- Address: ${bin.address}
+- Fill Level: ${bin.fillLevel}%
+- Status: ${bin.status.toUpperCase()}
+- Area: ${bin.area}
+- Prediction: ${bin.prediction}
+- Last Updated: ${bin.lastUpdated}
+                `;
+                alert(details);
+            }
+        }
+
+        function markAsAttended(binId) {
+            const index = overflowBins.findIndex(b => b.id === binId);
+            if (index !== -1) {
+                const bin = overflowBins[index];
+                showNotification(`Bin #${bin.id} at ${bin.location} marked as attended`, 'info');
+                
+                // Remove from overflow bins
+                overflowBins.splice(index, 1);
+                
+                // Add to attended bins (for demo)
+                attendedBins.push({...bin, status: 'safe', lastUpdated: 'Just now'});
+                
+                // Update UI
+                updateStats();
+                renderAlerts();
+                renderBinsTable();
+                
+                // Simulate email confirmation
+                simulateConfirmationEmail(bin);
+            }
+        }
+
+        function simulateNewAlerts() {
+            // Create new test alerts
+            const newBins = [
+                {
+                    id: overflowBins.length + 1,
+                    location: "Sports Complex",
+                    fillLevel: 89,
+                    status: "critical",
+                    lastUpdated: "Just now",
