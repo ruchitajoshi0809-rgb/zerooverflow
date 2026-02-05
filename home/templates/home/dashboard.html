@@ -468,9 +468,10 @@
     </style>
 </head>
 <body>
-    <a href="/" class="btn btn-sm btn-outline-primary mb-3">
-    ⬅ Back to Public Dashboard
-</a>
+    <a href="/" class="btn btn-sm btn-outline-primary">
+        ⬅ Back to Public Dashboard
+    </a>
+ 
     <!-- Header with Navigation -->
     <header class="dashboard-header">
         <div class="dashboard-container">
@@ -549,7 +550,7 @@
                             <i class="fas fa-check-circle"></i>
                         </div>
                         <div class="stat-info">
-                            <div class="stat-value" id="safe-bins">18</div>
+                            <div class="stat-value" id="safe-bins">4</div>
                             <div class="stat-label">Safe Bins</div>
                             <div class="stat-change positive">
                                 <i class="fas fa-arrow-up me-1"></i> 5% from yesterday
@@ -591,7 +592,7 @@
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <span>Bin Status Overview</span>
                                 <div>
-                                    <span class="badge bg-success me-2">Safe: 18</span>
+                                    <span class="badge bg-success me-2">Safe: 4</span>
                                     <span class="badge bg-warning me-2">Warning: 4</span>
                                     <span class="badge bg-danger">Critical: 2</span>
                                 </div>
@@ -770,7 +771,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Data will be populated by JavaScript -->
                                 </tbody>
                             </table>
                         </div>
@@ -1141,7 +1141,7 @@
                     <small class="text-muted">Powered by AI & IoT Technology</small>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <p class="mb-0">© 2024 ZeroOverflow AI Dashboard</p>
+                    <p class="mb-0"> &copy;  2024 ZeroOverflow AI Dashboard</p>
                     <small class="text-muted">Hackathon Project | Real-time Monitoring System</small>
                 </div>
             </div>
@@ -1199,9 +1199,9 @@
             const criticalBins = binData.filter(bin => bin.status === "critical").length;
             
             document.getElementById('total-bins').textContent = totalBins;
-            document.getElementById('safe-bins').textContent = safeBins;
-            document.getElementById('warning-bins').textContent = warningBins;
-            document.getElementById('danger-bins').textContent = criticalBins;
+            //document.getElementById('safe-bins').textContent = safeBins;
+            //document.getElementById('warning-bins').textContent = warningBins;
+            //document.getElementById('danger-bins').textContent = criticalBins;
         }
         
         function renderBinTable() {

@@ -1,5 +1,4 @@
-# home/models.py - COMPLETE CORRECT VERSION
-from django.db import models  # ← THIS LINE IS MISSING!
+from django.db import models 
 from django.utils import timezone
 
 class GarbageBin(models.Model):
